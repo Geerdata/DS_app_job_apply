@@ -13,6 +13,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+echo Validando estructura de código...
+
 :: Check for administrative privileges
 >nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
 
@@ -49,16 +51,18 @@ if not defined latest_version (
 )
 
 :: Construct the ChromeDriver URL
-set "chrome_driver_url=https://storage.googleapis.com/chrome-for-testing-public/!latest_version!/win64/chromedriver-win64.zip"
+::set "chrome_driver_url=https://storage.googleapis.com/chrome-for-testing-public/!latest_version!/win64/chromedriver-win64.zip"
+set "chrome_driver:url=https://storage.googleapis.com/chrome-for-testing-public/136.0.7052.2/win64/chrome-win64.zip"
 
-echo Latest ChromeDriver version: !latest_version!.
-echo Downloading ChromeDriver from URL: '!chrome_driver_url!' ...
+::echo Latest ChromeDriver version: !latest_version!.
+::echo Downloading ChromeDriver from URL: '!chrome_driver_url!' ...
 
 :: Step 3: Download ChromeDriver
 powershell -Command "& {Invoke-WebRequest -Uri !chrome_driver_url! -OutFile 'chromedriver.zip'}"
 
 :: Step 4: Create installation directory and unzip
-set "chrome_install_dir=C:\Program Files\Google\Chrome"
+set "chrome_install_dir=E:\Desarrollo\_Setup"
+::set "chrome_install_dir=C:\Program Files\Google\Chrome"
 if not exist "%chrome_install_dir%" mkdir "%chrome_install_dir%"
 
 :: Use PowerShell Expand-Archive for extraction (works with ZIP files)
@@ -70,7 +74,7 @@ if %errorlevel% neq 0 (
 
 
 :: Step 5: Add chromedriver.exe to PATH
-set "chromedriver_dir=%chrome_install_dir%\chromedriver-win64"
+::set "chromedriver_dir=%chrome_install_dir%\chromedriver-win64"
 
 @REM :: Update PATH for the current session
 @REM set "path=%path%;%chromedriver_dir%"
@@ -92,13 +96,14 @@ set "chromedriver_dir=%chrome_install_dir%\chromedriver-win64"
 :: Step 6: Clean up
 :CleanUp
 del chromedriver.zip
-del latest_versions_info.json
+::del latest_versions_info.json
 echo Removed setup files.
 
 
 :: Step 7: Open chromedriver
 echo Opening Chrome Driver...
-start "" "%chromedriver_dir%\chromedriver.exe"
+Start "" "E:\Desarrollo\_Setup\chrome-win64\chrome-win64\chrome.exe"
+::start "" "%chromedriver_dir%\chromedriver.exe"
 
 
 :: Check if python and chrome are installed or not

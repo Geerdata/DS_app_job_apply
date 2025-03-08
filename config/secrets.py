@@ -22,8 +22,6 @@ load_dotenv()
 
 
 # Login Credentials for LinkedIn (Optional)
-username = ""       # Enter your username in the quotes
-password = ""           # Enter your password in the quotes
 
 
 ## Artificial Intelligence (Beta Not-Recommended)

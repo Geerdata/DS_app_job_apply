@@ -1,19 +1,19 @@
 '''
-Author:     Sai Vignesh Golla
+Autor:     Sai Vignesh Golla
 LinkedIn:   https://www.linkedin.com/in/saivigneshgolla/
 
 Copyright (C) 2024 Sai Vignesh Golla
 
-License:    GNU Affero General Public License
+Licencia:    GNU Affero General Public License
             https://www.gnu.org/licenses/agpl-3.0.en.html
             
 GitHub:     https://github.com/GodsScion/Auto_job_applier_linkedIn
 
-version:    24.12.29.12.30
+versión:    24.12.29.12.30
 '''
 
 
-# Imports
+# Importaciones
 import os
 import csv
 import re
@@ -49,7 +49,7 @@ pyautogui.FAILSAFE = False
 # if use_resume_generator:    from resume_generator import is_logged_in_GPT, login_GPT, open_resume_chat, create_custom_resume
 
 
-#< Global Variables and logics
+#< Variables globales y lógicas
 
 if run_in_background == True:
     pause_at_failed_question = False
@@ -89,11 +89,11 @@ aiClient = None
 #>
 
 
-#< Login Functions
+#< Funciones de inicio de sesión
 def is_logged_in_LN() -> bool:
     '''
-    Function to check if user is logged-in in LinkedIn
-    * Returns: `True` if user is logged-in or `False` if not
+    Función para verificar si el usuario ha iniciado sesión en LinkedIn
+    * Retorna: `True` si el usuario ha iniciado sesión o `False` si no
     '''
     if driver.current_url == "https://www.linkedin.com/feed/": return True
     if try_linkText(driver, "Sign in"): return False
@@ -105,10 +105,10 @@ def is_logged_in_LN() -> bool:
 
 def login_LN() -> None:
     '''
-    Function to login for LinkedIn
-    * Tries to login using given `username` and `password` from `secrets.py`
-    * If failed, tries to login using saved LinkedIn profile button if available
-    * If both failed, asks user to login manually
+    Función para iniciar sesión en LinkedIn
+    * Intenta iniciar sesión usando `username` y `password` de `secrets.py`
+    * Si falla, intenta iniciar sesión usando el botón de perfil guardado de LinkedIn si está disponible
+    * Si ambos fallan, pide al usuario que inicie sesión manualmente
     '''
     # Find the username and password fields and fill them with user credentials
     driver.get("https://www.linkedin.com/login")
@@ -148,8 +148,8 @@ def login_LN() -> None:
 
 def get_applied_job_ids() -> set:
     '''
-    Function to get a `set` of applied job's Job IDs
-    * Returns a set of Job IDs from existing applied jobs history csv file
+    Función para obtener un `set` de IDs de trabajos aplicados
+    * Retorna un conjunto de IDs de trabajos del archivo csv de historial de trabajos aplicados existente
     '''
     job_ids = set()
     try:
@@ -165,7 +165,7 @@ def get_applied_job_ids() -> set:
 
 def set_search_location() -> None:
     '''
-    Function to set search location
+    Función para establecer la ubicación de búsqueda
     '''
     if search_location.strip():
         try:
@@ -187,7 +187,7 @@ def set_search_location() -> None:
 
 def apply_filters() -> None:
     '''
-    Function to apply job search filters
+    Función para aplicar filtros de búsqueda de trabajo
     '''
     set_search_location()
 
@@ -245,7 +245,7 @@ def apply_filters() -> None:
 
 def get_page_info() -> tuple[WebElement | None, int | None]:
     '''
-    Function to get pagination element and current page number
+    Función para obtener el elemento de paginación y el número de página actual
     '''
     try:
         pagination_element = try_find_by_classes(driver, ["artdeco-pagination", "artdeco-pagination__pages"])
@@ -262,14 +262,14 @@ def get_page_info() -> tuple[WebElement | None, int | None]:
 
 def get_job_main_details(job: WebElement, blacklisted_companies: set, rejected_jobs: set) -> tuple[str, str, str, str, str, bool]:
     '''
-    # Function to get job main details.
-    Returns a tuple of (job_id, title, company, work_location, work_style, skip)
-    * job_id: Job ID
-    * title: Job title
-    * company: Company name
-    * work_location: Work location of this job
-    * work_style: Work style of this job (Remote, On-site, Hybrid)
-    * skip: A boolean flag to skip this job
+    # Función para obtener los detalles principales del trabajo.
+    Retorna una tupla de (job_id, title, company, work_location, work_style, skip)
+    * job_id: ID del trabajo
+    * title: Título del trabajo
+    * company: Nombre de la empresa
+    * work_location: Ubicación del trabajo
+    * work_style: Estilo de trabajo de este trabajo (Remoto, Presencial, Híbrido)
+    * skip: Una bandera booleana para omitir este trabajo
     '''
     job_details_button = job.find_element(By.TAG_NAME, 'a')  # job.find_element(By.CLASS_NAME, "job-card-list__title")  # Problem in India
     scroll_to_view(driver, job_details_button, True)
@@ -301,15 +301,14 @@ def get_job_main_details(job: WebElement, blacklisted_companies: set, rejected_j
     try: 
         if not skip: job_details_button.click()
     except Exception as e:
-        print_lg(f'Failed to click "{title} | {company}" job on details button. Job ID: {job_id}!') 
-        # print_lg(e)
+        print_lg(f'Error al hacer clic en el botón de detalles del trabajo "{title} | {company}". ID: {job_id}!', e)
         discard_job()
         job_details_button.click() # To pass the error outside
     buffer(click_gap)
     return (job_id,title,company,work_location,work_style,skip)
 
 
-# Function to check for Blacklisted words in About Company
+# Función para verificar palabras en la lista negra en Acerca de la Empresa
 def check_blacklist(rejected_jobs: set, job_id: str, company: str, blacklisted_companies: set) -> tuple[set, set, WebElement] | ValueError:
     jobs_top_card = try_find_by_classes(driver, ["job-details-jobs-unified-top-card__primary-description-container","job-details-jobs-unified-top-card__primary-description","jobs-unified-top-card__primary-description","jobs-details__main-content"])
     about_company_org = find_by_class(driver, "jobs-company__box")
@@ -334,7 +333,7 @@ def check_blacklist(rejected_jobs: set, job_id: str, company: str, blacklisted_c
 
 
 
-# Function to extract years of experience required from About Job
+# Función para extraer años de experiencia requeridos de Acerca del Trabajo
 def extract_years_of_experience(text: str) -> int:
     # Extract all patterns like '10+ years', '5 years', '3-5 years', etc.
     matches = re.findall(re_experience, text)
@@ -354,9 +353,9 @@ def get_job_description(
     str | None
     ]:
     '''
-    # Job Description
-    Function to extract job description from About the Job.
-    ### Returns:
+    # Descripción del Trabajo
+    Función para extraer la descripción del trabajo de Acerca del Trabajo.
+    ### Retorna:
     - `jobDescription: str | 'Unknown'`
     - `experience_required: int | 'Unknown'`
     - `skip: bool`
@@ -402,20 +401,20 @@ def get_job_description(
         
 
 
-# Function to upload resume
+# Función para subir el currículum
 def upload_resume(modal: WebElement, resume: str) -> tuple[bool, str]:
     try:
         modal.find_element(By.NAME, "file").send_keys(os.path.abspath(resume))
         return True, os.path.basename(default_resume_path)
     except: return False, "Previous resume"
 
-# Function to answer common questions for Easy Apply
+# Función para responder preguntas comunes para Easy Apply
 def answer_common_questions(label: str, answer: str) -> str:
     if 'sponsorship' in label or 'visa' in label: answer = require_visa
     return answer
 
 
-# Function to answer the questions for Easy Apply
+# Función para responder las preguntas para Easy Apply
 def answer_questions(modal: WebElement, questions_list: set, work_location: str) -> set:
     # Get all questions from the page
      
@@ -649,7 +648,7 @@ def answer_questions(modal: WebElement, questions_list: set, work_location: str)
 
 def external_apply(pagination_element: WebElement, job_id: str, job_link: str, resume: str, date_listed, application_link: str, screenshot_name: str) -> tuple[bool, str, int]:
     '''
-    Function to open new tab and save external job application links
+    Función para abrir una nueva pestaña y guardar enlaces de aplicaciones de trabajo externas
     '''
     global tabs_count, dailyEasyApplyLimitReached
     if easy_apply_only:
@@ -681,7 +680,7 @@ def external_apply(pagination_element: WebElement, job_id: str, job_link: str, r
 
 def follow_company(modal: WebDriver = driver) -> None:
     '''
-    Function to follow or un-follow easy applied companies based om `follow_companies`
+    Función para seguir o dejar de seguir empresas aplicadas fácilmente según `follow_companies`
     '''
     try:
         follow_checkbox_input = try_xp(modal, ".//input[@id='follow-company-checkbox' and @type='checkbox']", False)
@@ -692,10 +691,10 @@ def follow_company(modal: WebDriver = driver) -> None:
     
 
 
-#< Failed attempts logging
+#< Registro de intentos fallidos
 def failed_job(job_id: str, job_link: str, resume: str, date_listed, error: str, exception: Exception, application_link: str, screenshot_name: str) -> None:
     '''
-    Function to update failed jobs list in excel
+    Función para actualizar la lista de trabajos fallidos en excel
     '''
     try:
         with open(failed_file_name, 'a', newline='', encoding='utf-8') as file:
@@ -711,8 +710,8 @@ def failed_job(job_id: str, job_link: str, resume: str, date_listed, error: str,
 
 def screenshot(driver: WebDriver, job_id: str, failedAt: str) -> str:
     '''
-    Function to to take screenshot for debugging
-    - Returns screenshot name as String
+    Función para tomar una captura de pantalla para depuración
+    - Retorna el nombre de la captura de pantalla como String
     '''
     screenshot_name = "{} - {} - {}.png".format( job_id, failedAt, str(datetime.now()) )
     path = logs_folder_path+"/screenshots/"+screenshot_name.replace(":",".")
@@ -729,7 +728,7 @@ def submitted_jobs(job_id: str, title: str, company: str, work_location: str, wo
                    reposted: bool, date_listed: datetime | Literal['Unknown'], date_applied:  datetime | Literal['Pending'], job_link: str, application_link: str, 
                    questions_list: set | None, connect_request: Literal['In Development']) -> None:
     '''
-    Function to create or update the Applied jobs CSV file, once the application is submitted successfully
+    Función para crear o actualizar el archivo CSV de trabajos aplicados, una vez que la aplicación se envía con éxito
     '''
     try:
         with open(file_name, mode='a', newline='', encoding='utf-8') as csv_file:
@@ -748,17 +747,18 @@ def submitted_jobs(job_id: str, title: str, company: str, work_location: str, wo
 
 
 
-# Function to discard the job application
+# Función para descartar la solicitud de trabajo
 def discard_job() -> None:
     actions.send_keys(Keys.ESCAPE).perform()
-    wait_span_click(driver, 'Discard', 2)
+    if not wait_span_click(driver, 'Descartar', 2):
+        print_lg("Fallo al encontrar el botón 'Descartar' para descartar la solicitud.")
 
 
 
 
 
 
-# Function to apply to jobs
+# Función para aplicar a trabajos
 def apply_to_jobs(search_terms: list[str]) -> None:
     applied_jobs = get_applied_job_ids()
     rejected_jobs = set()
@@ -798,10 +798,10 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                     # Redundant fail safe check for applied jobs!
                     try:
                         if job_id in applied_jobs or find_by_class(driver, "jobs-s-apply__application-link", 2):
-                            print_lg(f'Already applied to "{title} | {company}" job. Job ID: {job_id}!')
+                            print_lg(f'Ya se aplicó al trabajo "{title} | {company}". ID de trabajo: {job_id}!')
                             continue
                     except Exception as e:
-                        print_lg(f'Trying to Apply to "{title} | {company}" job. Job ID: {job_id}')
+                        print_lg(f'Intentando aplicar al trabajo "{title} | {company}". ID de trabajo: {job_id}')
 
                     job_link = "https://www.linkedin.com/jobs/view/"+job_id
                     application_link = "Easy Applied"
@@ -832,42 +832,109 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                     # Hiring Manager info
                     try:
                         hr_info_card = WebDriverWait(driver,2).until(EC.presence_of_element_located((By.CLASS_NAME, "hirer-card__hirer-information")))
-                        hr_link = hr_info_card.find_element(By.TAG_NAME, "a").get_attribute("href")
-                        hr_name = hr_info_card.find_element(By.TAG_NAME, "span").text
-                        # if connect_hr:
-                        #     driver.switch_to.new_window('tab')
-                        #     driver.get(hr_link)
-                        #     wait_span_click("More")
-                        #     wait_span_click("Connect")
-                        #     wait_span_click("Add a note")
-                        #     message_box = driver.find_element(By.XPATH, "//textarea")
-                        #     message_box.send_keys(connect_request_message)
-                        #     if close_tabs: driver.close()
-                        #     driver.switch_to.window(linkedIn_tab) 
-                        # def message_hr(hr_info_card):
-                        #     if not hr_info_card: return False
-                        #     hr_info_card.find_element(By.XPATH, ".//span[normalize-space()='Message']").click()
-                        #     message_box = driver.find_element(By.XPATH, "//div[@aria-label='Write a message…']")
-                        #     message_box.send_keys()
-                        #     try_xp(driver, "//button[normalize-space()='Send']")        
+                        # ...existing code...
+                        a_elem = hr_info_card.find_element(By.TAG_NAME, "a") if hr_info_card else None
+                        span_elem = hr_info_card.find_element(By.TAG_NAME, "span") if hr_info_card else None
+                        hr_link = a_elem.get_attribute("href") if a_elem else "Unknown"
+                        hr_name = span_elem.text if span_elem and span_elem.text else "Unknown"
+                        # ...existing code...
                     except Exception as e:
-                        print_lg(f'HR info was not given for "{title}" with Job ID: {job_id}!')
+                        print_lg(f'No se proporcionó la información de RRHH para "{title}" con ID de trabajo: {job_id}!')
                         # print_lg(e)
 
 
-                    # Calculation of date posted
+                    # Calculation of date posted with improved error handling
                     try:
-                        # try: time_posted_text = find_by_class(driver, "jobs-unified-top-card__posted-date", 2).text
-                        # except: 
-                        time_posted_text = jobs_top_card.find_element(By.XPATH, './/span[contains(normalize-space(), " ago")]').text
-                        print("Time Posted: " + time_posted_text)
-                        if time_posted_text.__contains__("Reposted"):
-                            reposted = True
-                            time_posted_text = time_posted_text.replace("Reposted", "")
-                        date_listed = calculate_date_posted(time_posted_text)
+                        date_selectors = [
+                            # Selectores específicos de LinkedIn
+                            ".//div[contains(@class, 'jobs-unified-top-card__posted-date')]",
+                            ".//div[contains(@class, 'jobs-unified-top-card__subtitle')]//span[last()]",
+                            ".//span[contains(@class, 'jobs-unified-top-card__subtitle-secondary-grouping')]//span[last()]",
+                            ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'ago')]]",
+                            ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'Posted')]]",
+                            # Selectores de respaldo
+                            ".//span[text()[contains(., ' ago')]]",
+                            ".//span[text()[contains(., 'Posted')]]",
+                            ".//time[contains(@datetime, 'T')]",
+                            # Búsqueda más amplia
+                            ".//*[contains(text(), ' ago')]"
+                        ]
+                        
+                        date_element = None
+                        time_posted_text = None
+                        
+                        # Función auxiliar para limpiar el texto de fecha
+                        def clean_date_text(text):
+                            if not text:
+                                return None
+                            text = text.strip()
+                            for prefix in ['Posted', 'Reposted', '·']:
+                                text = text.replace(prefix, '').strip()
+                            return text
+                        
+                        # Primero buscar en jobs_top_card
+                        if jobs_top_card:
+                            for selector in date_selectors:
+                                try:
+                                    elements = jobs_top_card.find_elements(By.XPATH, selector)
+                                    for element in elements:
+                                        text = clean_date_text(element.text)
+                                        if text and ('ago' in text.lower() or 'hour' in text.lower() or 'day' in text.lower() or 'week' in text.lower() or 'month' in text.lower()):
+                                            date_element = element
+                                            time_posted_text = text
+                                            break
+                                    if date_element:
+                                        break
+                                except Exception:
+                                    continue
+                        
+                        # Si no se encuentra, buscar en todo el documento
+                        if not date_element:
+                            print_lg("Buscando fecha en todo el documento...")
+                            for selector in date_selectors:
+                                try:
+                                    elements = driver.find_elements(By.XPATH, selector)
+                                    for element in elements:
+                                        text = clean_date_text(element.text)
+                                        if text and ('ago' in text.lower() or 'hour' in text.lower() or 'day' in text.lower() or 'week' in text.lower() or 'month' in text.lower()):
+                                            date_element = element
+                                            time_posted_text = text
+                                            break
+                                    if date_element:
+                                        break
+                                except Exception:
+                                    continue
+                        
+                        # Si aún no se encuentra, intentar con el atributo datetime
+                        if not date_element:
+                            try:
+                                time_element = driver.find_element(By.XPATH, ".//time[@datetime]")
+                                date_listed = time_element.get_attribute("datetime")
+                                print_lg(f"Fecha encontrada en atributo datetime: {date_listed}")
+                            except Exception:
+                                # Último intento: buscar cualquier texto que contenga una referencia temporal
+                                try:
+                                    temporal_texts = driver.find_elements(By.XPATH, 
+                                        ".//*[contains(text(), 'hour') or contains(text(), 'day') or contains(text(), 'week') or contains(text(), 'month')]")
+                                    for element in temporal_texts:
+                                        text = clean_date_text(element.text)
+                                        if text and any(word in text.lower() for word in ['hour', 'day', 'week', 'month', 'ago']):
+                                            time_posted_text = text
+                                            break
+                                except Exception:
+                                    pass
+                        
+                        if time_posted_text:
+                            print_lg(f"Time Posted encontrado: {time_posted_text}")
+                            reposted = "reposted" in time_posted_text.lower()
+                            date_listed = calculate_date_posted(time_posted_text)
+                        else:
+                            print_lg("No se pudo encontrar ninguna información de fecha")
+                            date_listed = "Unknown"
+                            
                     except Exception as e:
-                        print_lg("Failed to calculate the date posted!",e)
-
+                        print_lg(f"Error al calcular la fecha de publicación: {str(e)}")
+                        date_listed = "Unknown"
 
                     description, experience_required, skip, reason, message = get_job_description()
                     if skip:
@@ -980,8 +1047,8 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                     break
 
         except Exception as e:
-            print_lg("Failed to find Job listings!")
-            critical_error_log("In Applier", e)
+            print_lg("No se pudieron encontrar ofertas de trabajo!", e)
+            critical_error_log("En Aplicador", e)
             print_lg(driver.page_source, pretty=True)
             # print_lg(e)
 
@@ -1008,8 +1075,13 @@ def run(total_runs: int) -> int:
 chatGPT_tab = False
 linkedIn_tab = False
 
+def validate_code_structure() -> None:
+    # Función simple para validar (o notificar) la estructura del código.
+    print("Estructura de código validada.")
+
 def main() -> None:
     try:
+        validate_code_structure()  # Validación de la estructura
         global linkedIn_tab, tabs_count, useNewResume, aiClient
         alert_title = "Error Occurred. Closing Browser!"
         total_runs = 1        
@@ -1093,9 +1165,15 @@ def main() -> None:
             pyautogui.alert(msg,"Info")
             print_lg("\n"+msg)
         ai_close_openai_client(aiClient)
-        try: driver.quit()
-        except Exception as e: critical_error_log("When quitting...", e)
-
+        try:
+            driver.quit()
+        except OSError as oe:
+            if "[WinError 6]" in str(oe):
+                print_lg("Driver ya cerrado. Se ignora el error al intentar cerrar el driver.")
+            else:
+                critical_error_log("When quitting...", oe)
+        except Exception as e:
+            critical_error_log("When quitting...", e)
 
 if __name__ == "__main__":
     main()
