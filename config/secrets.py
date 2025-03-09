@@ -22,8 +22,8 @@ load_dotenv()
 
 
 # Login Credentials for LinkedIn (Optional)
-username = "rodriguezgermancarlos@gmail.com"                      # Your LinkedIn username/email
-password = "Galaxyger4009"                      # Your LinkedIn password
+username = ""                      # Your LinkedIn username/email
+password = ""                      # Your LinkedIn password
 
 
 ## Artificial Intelligence (Beta Not-Recommended)
