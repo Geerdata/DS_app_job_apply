@@ -18,6 +18,7 @@ import os
 import csv
 import re
 import pyautogui
+import time
 
 
 from random import choice, shuffle, randint
@@ -653,13 +654,29 @@ def external_apply(pagination_element: WebElement, job_id: str, job_link: str, r
     global tabs_count, dailyEasyApplyLimitReached
     if easy_apply_only:
         try:
-            if "exceeded the daily application limit" in driver.find_element(By.CLASS_NAME, "artdeco-inline-feedback__message").text: dailyEasyApplyLimitReached = True
+            # Verificando tanto en inglés como en español
+            if "exceeded the daily application limit" in driver.find_element(By.CLASS_NAME, "artdeco-inline-feedback__message").text or "excedido el límite diario" in driver.find_element(By.CLASS_NAME, "artdeco-inline-feedback__message").text: 
+                dailyEasyApplyLimitReached = True
         except: pass
         print_lg("Easy apply failed I guess!")
         if pagination_element != None: return True, application_link, tabs_count
     try:
-        wait.until(EC.element_to_be_clickable((By.XPATH, ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3')]"))).click() # './/button[contains(span, "Apply") and not(span[contains(@class, "disabled")])]'
-        wait_span_click(driver, "Continue", 1, True, False)
+        # Intentar con texto en inglés
+        apply_button = driver.find_elements(By.XPATH, ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3')]")
+        if apply_button:
+            print_lg("Botón de aplicación encontrado, intentando hacer clic...")
+            apply_button[0].click()
+        else:
+            print_lg("No se encontró el botón de aplicación, buscando alternativas...")
+            # Mostrar todos los botones disponibles para depuración
+            all_buttons = driver.find_elements(By.TAG_NAME, "button")
+            for btn in all_buttons[:5]:  # Mostrar solo los primeros 5 para no saturar
+                print_lg(f"Botón encontrado: Texto={btn.text}, Clase={btn.get_attribute('class')}")
+        
+        # Intentar hacer clic en "Continue" o "Continuar"
+        if not wait_span_click(driver, "Continue", 1, True, False):
+            wait_span_click(driver, "Continuar", 1, True, False)
+            
         windows = driver.window_handles
         tabs_count = len(windows)
         driver.switch_to.window(windows[-1])
@@ -671,11 +688,11 @@ def external_apply(pagination_element: WebElement, job_id: str, job_link: str, r
     except Exception as e:
         # print_lg(e)
         print_lg("Failed to apply!")
+        print_lg(f"Error detallado: {str(e)}")  # Mostrando el error completo
         failed_job(job_id, job_link, resume, date_listed, "Probably didn't find Apply button or unable to switch tabs.", e, application_link, screenshot_name)
         global failed_count
         failed_count += 1
         return True, application_link, tabs_count
-
 
 
 def follow_company(modal: WebDriver = driver) -> None:
@@ -809,12 +826,18 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                     hr_link = "Unknown"
                     hr_name = "Unknown"
                     connect_request = "In Development" # Still in development
-                    date_listed = "Unknown"
+                    date_listed = "Unknown"   # Valor predeterminado
+                    fecha_encontrada = False  # Inicializamos la variable al principio
+                    fecha_datetime_encontrada = False  # Nueva variable para controlar si se encontró en datetime
                     skills = "Needs an AI" # Still in development
                     resume = "Pending"
                     reposted = False
                     questions_list = None
                     screenshot_name = "Not Available"
+                    
+                    # Mensaje para depuración
+                    no_fecha_mensaje = "No se pudo encontrar ninguna información de fecha"
+                    fecha_encontrada_mensaje = "Fecha final utilizada: "
 
                     try:
                         rejected_jobs, blacklisted_companies, jobs_top_card = check_blacklist(rejected_jobs,job_id,company,blacklisted_companies)
@@ -825,7 +848,7 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                         continue
                     except Exception as e:
                         print_lg("Failed to scroll to About Company!")
-                        # print_lg(e)
+                        print_lg(e)  # Mostrando el error para depuración
 
 
 
@@ -840,101 +863,181 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                         # ...existing code...
                     except Exception as e:
                         print_lg(f'No se proporcionó la información de RRHH para "{title}" con ID de trabajo: {job_id}!')
-                        # print_lg(e)
+                        print_lg(e)  # Mostrando el error para depuración
 
 
                     # Calculation of date posted with improved error handling
                     try:
-                        date_selectors = [
-                            # Selectores específicos de LinkedIn
-                            ".//div[contains(@class, 'jobs-unified-top-card__posted-date')]",
-                            ".//div[contains(@class, 'jobs-unified-top-card__subtitle')]//span[last()]",
-                            ".//span[contains(@class, 'jobs-unified-top-card__subtitle-secondary-grouping')]//span[last()]",
-                            ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'ago')]]",
-                            ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'Posted')]]",
-                            # Selectores de respaldo
-                            ".//span[text()[contains(., ' ago')]]",
-                            ".//span[text()[contains(., 'Posted')]]",
-                            ".//time[contains(@datetime, 'T')]",
-                            # Búsqueda más amplia
-                            ".//*[contains(text(), ' ago')]"
-                        ]
+                        # PRIMERO intentamos buscar la fecha en el atributo datetime
+                        # Esta es la forma más confiable de encontrar la fecha
+                        try:
+                            time_element = driver.find_element(By.XPATH, ".//time[@datetime]")
+                            datetime_value = time_element.get_attribute("datetime")
+                            print_lg(f"ÉXITO: Fecha encontrada en atributo datetime: {datetime_value}")
+                            
+                            # Si encontramos la fecha, la usamos directamente
+                            date_listed = datetime_value
+                            fecha_encontrada = True
+                            fecha_datetime_encontrada = True  # Marcamos que se encontró en datetime específicamente
+                            print_lg(f"Usando la fecha del atributo datetime: {date_listed}")
+                            # Protección: evitamos que continue la búsqueda
+                            break
+                        except Exception as e:
+                            # Si no encontramos fecha en el atributo datetime, 
+                            # continuamos con los otros métodos
+                            print_lg("INFO: No se encontró fecha en atributo datetime, buscando en texto...")
+                            
+                            # Si encontramos fecha en el atributo datetime, no necesitamos buscar más
+                            if fecha_datetime_encontrada:
+                                print_lg(f"{fecha_encontrada_mensaje}{date_listed} (de datetime)")
+                            else:
+                                # Solo continuamos con la búsqueda basada en texto si no encontramos la fecha en datetime
+                                if not fecha_encontrada:
+                                    date_selectors = [
+                                        # Selectores específicos de LinkedIn
+                                        ".//div[contains(@class, 'jobs-unified-top-card__posted-date')]",
+                                        ".//div[contains(@class, 'jobs-unified-top-card__subtitle')]//span[last()]",
+                                        ".//span[contains(@class, 'jobs-unified-top-card__subtitle-secondary-grouping')]//span[last()]",
+                                        ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'ago')]]",
+                                        ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'Posted')]]",
+                                        # Selectores para español
+                                        ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'hace')]]",
+                                        ".//div[contains(@class, 'jobs-unified-top-card')]//span[text()[contains(., 'Publicado')]]",
+                                        ".//span[text()[contains(., 'hace')]]",
+                                        ".//span[text()[contains(., 'Publicado')]]",
+                                        # Selectores de respaldo
+                                        ".//span[text()[contains(., ' ago')]]",
+                                        ".//span[text()[contains(., 'Posted')]]",
+                                        # Búsqueda más amplia
+                                        ".//*[contains(text(), ' ago')]",
+                                        ".//*[contains(text(), 'hace')]",
+                                        ".//*[contains(text(), 'día')]",
+                                        ".//*[contains(text(), 'dias')]",
+                                        ".//*[contains(text(), 'semana')]",
+                                        ".//*[contains(text(), 'hora')]"
+                                    ]
+                                    
+                                    time_posted_text = None
+                                    date_element = None
+                                    
+                                    # Función auxiliar para limpiar el texto de fecha
+                                    def clean_date_text(text):
+                                        if not text:
+                                            return None
+                                        text = text.strip()
+                                        for prefix in ['Posted', 'Reposted', '·', 'Publicado', 'Republicado']:
+                                            text = text.replace(prefix, '').strip()
+                                        return text
+                                    
+                                    # Función para validar si un texto realmente contiene información de fecha
+                                    def is_valid_date_text(text):
+                                        if not text:
+                                            return False
+                                        # Palabras clave que deberían estar en un texto de fecha válido
+                                        date_keywords = [
+                                            # Inglés
+                                            'ago', 'hour', 'day', 'week', 'month', 'year', 'years', 'mins', 'minutes', 'seconds',
+                                            # Español
+                                            'hace', 'hora', 'horas', 'día', 'días', 'dias', 'semana', 'semanas', 
+                                            'mes', 'meses', 'año', 'años', 'minuto', 'minutos', 'segundo', 'segundos'
+                                        ]
+                                        
+                                        # Palabras que indican que el texto NO es una fecha
+                                        negative_keywords = [
+                                            'guardar', 'save', 'share', 'compartir', 'apply', 'aplicar', 'submit',
+                                            'follow', 'seguir', 'connect', 'conectar', 'report', 'reportar',
+                                            'more', 'más', 'view', 'ver', 'show', 'mostrar', 'details', 'detalles',
+                                            'job', 'trabajo', 'empleo', 'position', 'puesto', 'company', 'empresa',
+                                            'interview', 'entrevista', 'profile', 'perfil', 'review', 'revisar',
+                                            'salary', 'salario', 'skills', 'habilidades', 'click', 'clic',
+                                            'en', 'in', 'a', 'to', 'the', 'el', 'la', 'los', 'las', 'un', 'una'
+                                        ]
+                                        
+                                        # Si contiene alguna palabra negativa, no es una fecha
+                                        if any(neg_word in text.lower() for neg_word in negative_keywords):
+                                            return False
+                                        
+                                        # Debe contener al menos una palabra clave de fecha
+                                        return any(keyword in text.lower() for keyword in date_keywords)
+                                    
+                                    # Primero buscar en jobs_top_card
+                                    if jobs_top_card:
+                                        for selector in date_selectors:
+                                            try:
+                                                elements = jobs_top_card.find_elements(By.XPATH, selector)
+                                                for element in elements:
+                                                    text = clean_date_text(element.text)
+                                                    if text and is_valid_date_text(text):
+                                                        date_element = element
+                                                        time_posted_text = text
+                                                        break
+                                                if date_element:
+                                                    break
+                                            except Exception:
+                                                continue
+                                    
+                                    # Si no se encuentra, buscar en todo el documento
+                                    if not date_element:
+                                        print_lg("INFO: Buscando fecha en todo el documento...")
+                                        for selector in date_selectors:
+                                            try:
+                                                elements = driver.find_elements(By.XPATH, selector)
+                                                for element in elements:
+                                                    text = clean_date_text(element.text)
+                                                    if text and is_valid_date_text(text):
+                                                        date_element = element
+                                                        time_posted_text = text
+                                                        break
+                                                if date_element:
+                                                    break
+                                            except Exception:
+                                                continue
+                                    
+                                    # Último intento: buscar cualquier texto que contenga una referencia temporal
+                                    if not date_element and not time_posted_text:
+                                        try:
+                                            temporal_texts = driver.find_elements(By.XPATH, 
+                                                ".//*[contains(text(), 'hour') or contains(text(), 'day') or contains(text(), 'week') or contains(text(), 'month') or " + 
+                                                "contains(text(), 'hora') or contains(text(), 'día') or contains(text(), 'dias') or contains(text(), 'semana') or contains(text(), 'mes')]")
+                                            for element in temporal_texts:
+                                                text = clean_date_text(element.text)
+                                                if text and is_valid_date_text(text):
+                                                    time_posted_text = text
+                                                    break
+                                        except Exception:
+                                            pass
+                                    
+                                    # Procesamos el texto de fecha si lo encontramos
+                                    if time_posted_text:
+                                        # Verificación adicional para asegurarse de que es un texto de fecha válido
+                                        if is_valid_date_text(time_posted_text):
+                                            print_lg(f"Time Posted encontrado: {time_posted_text}")
+                                            reposted = "reposted" in time_posted_text.lower()
+                                            date_listed = calculate_date_posted(time_posted_text)
+                                            fecha_encontrada = True
+                                        else:
+                                            print_lg(f"Se encontró texto pero no parece ser una fecha válida: {time_posted_text}")
+                                            time_posted_text = None  # Reiniciamos para que no se considere como fecha encontrada
                         
-                        date_element = None
-                        time_posted_text = None
-                        
-                        # Función auxiliar para limpiar el texto de fecha
-                        def clean_date_text(text):
-                            if not text:
-                                return None
-                            text = text.strip()
-                            for prefix in ['Posted', 'Reposted', '·']:
-                                text = text.replace(prefix, '').strip()
-                            return text
-                        
-                        # Primero buscar en jobs_top_card
-                        if jobs_top_card:
-                            for selector in date_selectors:
-                                try:
-                                    elements = jobs_top_card.find_elements(By.XPATH, selector)
-                                    for element in elements:
-                                        text = clean_date_text(element.text)
-                                        if text and ('ago' in text.lower() or 'hour' in text.lower() or 'day' in text.lower() or 'week' in text.lower() or 'month' in text.lower()):
-                                            date_element = element
-                                            time_posted_text = text
-                                            break
-                                    if date_element:
-                                        break
-                                except Exception:
-                                    continue
-                        
-                        # Si no se encuentra, buscar en todo el documento
-                        if not date_element:
-                            print_lg("Buscando fecha en todo el documento...")
-                            for selector in date_selectors:
-                                try:
-                                    elements = driver.find_elements(By.XPATH, selector)
-                                    for element in elements:
-                                        text = clean_date_text(element.text)
-                                        if text and ('ago' in text.lower() or 'hour' in text.lower() or 'day' in text.lower() or 'week' in text.lower() or 'month' in text.lower()):
-                                            date_element = element
-                                            time_posted_text = text
-                                            break
-                                    if date_element:
-                                        break
-                                except Exception:
-                                    continue
-                        
-                        # Si aún no se encuentra, intentar con el atributo datetime
-                        if not date_element:
-                            try:
-                                time_element = driver.find_element(By.XPATH, ".//time[@datetime]")
-                                date_listed = time_element.get_attribute("datetime")
-                                print_lg(f"Fecha encontrada en atributo datetime: {date_listed}")
-                            except Exception:
-                                # Último intento: buscar cualquier texto que contenga una referencia temporal
-                                try:
-                                    temporal_texts = driver.find_elements(By.XPATH, 
-                                        ".//*[contains(text(), 'hour') or contains(text(), 'day') or contains(text(), 'week') or contains(text(), 'month')]")
-                                    for element in temporal_texts:
-                                        text = clean_date_text(element.text)
-                                        if text and any(word in text.lower() for word in ['hour', 'day', 'week', 'month', 'ago']):
-                                            time_posted_text = text
-                                            break
-                                except Exception:
-                                    pass
-                        
-                        if time_posted_text:
-                            print_lg(f"Time Posted encontrado: {time_posted_text}")
-                            reposted = "reposted" in time_posted_text.lower()
-                            date_listed = calculate_date_posted(time_posted_text)
+                        # Mensaje final sobre el estado de la fecha
+                        if fecha_encontrada or fecha_datetime_encontrada:
+                            print_lg(f"{fecha_encontrada_mensaje}{date_listed}")
                         else:
-                            print_lg("No se pudo encontrar ninguna información de fecha")
+                            print_lg("INFO: No se encontró información de fecha - Usando 'Unknown'")
                             date_listed = "Unknown"
                             
                     except Exception as e:
                         print_lg(f"Error al calcular la fecha de publicación: {str(e)}")
                         date_listed = "Unknown"
+                    
+                    # Depuración: Muestra el estado final de las variables
+                    print_lg(f"DEBUG: Estado final - fecha_encontrada: {fecha_encontrada}, fecha_datetime_encontrada: {fecha_datetime_encontrada}, date_listed: {date_listed}")
+                    
+                    # Continuamos con el proceso independientemente de si encontramos la fecha o no
+                    print_lg(f"Continuando con el proceso de aplicación... (Fecha: {date_listed})")
+                    
+                    # Agregamos un pequeño tiempo de espera para asegurarnos de que la página se ha cargado completamente
+                    time.sleep(2)
 
                     description, experience_required, skip, reason, message = get_job_description()
                     if skip:
@@ -950,14 +1053,65 @@ def apply_to_jobs(search_terms: list[str]) -> None:
 
                     uploaded = False
                     # Case 1: Easy Apply Button
-                    if try_xp(driver, ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3') and contains(@aria-label, 'Easy')]"):
-                        try: 
+                    print_lg("Buscando botón de Easy Apply...")
+                    
+                    # Búsqueda más amplia que incluye variantes en español
+                    button_selectors = [
+                        # Inglés
+                        ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3') and contains(@aria-label, 'Easy')]",
+                        # Español
+                        ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3') and contains(@aria-label, 'fácil')]",
+                        # Búsqueda genérica
+                        ".//button[contains(@class,'jobs-apply-button') and contains(@class, 'artdeco-button--3')]",
+                        ".//button[contains(@class,'jobs-apply-button')]"
+                    ]
+                    
+                    easy_apply_found = False
+                    for selector in button_selectors:
+                        buttons = driver.find_elements(By.XPATH, selector)
+                        if buttons:
+                            print_lg(f"Botón encontrado con selector: {selector}")
+                            print_lg(f"Texto del botón: {buttons[0].text}")
+                            print_lg(f"Atributos del botón: Clase={buttons[0].get_attribute('class')}, Aria-Label={buttons[0].get_attribute('aria-label')}")
+                            try:
+                                # Intentar hacer clic en el botón
+                                print_lg("Intentando hacer clic en el botón...")
+                                buttons[0].click()
+                                print_lg("Clic exitoso!")
+                                easy_apply_found = True
+                                break
+                            except Exception as e:
+                                print_lg(f"Error al hacer clic en el botón: {str(e)}")
+                                continue
+                    
+                    if not easy_apply_found:
+                        print_lg("No se encontró ningún botón de aplicación. Mostrando todos los botones disponibles:")
+                        all_buttons = driver.find_elements(By.TAG_NAME, "button")
+                        for i, btn in enumerate(all_buttons[:10]):  # Mostrar los primeros 10 botones
+                            print_lg(f"Botón {i+1}: Texto='{btn.text}', Clase='{btn.get_attribute('class')}', Aria-Label='{btn.get_attribute('aria-label')}'")
+                        
+                        # Si no se encuentra ningún botón específico, intentar buscar por texto
+                        apply_buttons = driver.find_elements(By.XPATH, "//button[contains(text(), 'Apply') or contains(text(), 'Aplicar')]")
+                        if apply_buttons:
+                            print_lg(f"Se encontraron {len(apply_buttons)} botones con texto 'Apply' o 'Aplicar'")
+                            try:
+                                apply_buttons[0].click()
+                                print_lg("Clic en botón de texto 'Apply/Aplicar' exitoso!")
+                                easy_apply_found = True
+                            except Exception as e:
+                                print_lg(f"Error al hacer clic en botón por texto: {str(e)}")
+                    
+                    # Si se encontró y se hizo clic en el botón de Easy Apply, continuar con el proceso normal
+                    if easy_apply_found:
+                        print_lg("Procesando aplicación Easy Apply...")
+                        try:
                             try:
                                 errored = ""
                                 modal = find_by_class(driver, "jobs-easy-apply-modal")
-                                wait_span_click(modal, "Next", 1)
-                                # if description != "Unknown":
-                                #     resume = create_custom_resume(description)
+                                # Intentar con Next o Siguiente
+                                if not wait_span_click(modal, "Next", 1):
+                                    wait_span_click(modal, "Siguiente", 1)
+                                
                                 resume = "Previous resume"
                                 next_button = True
                                 questions_list = set()
@@ -967,71 +1121,107 @@ def apply_to_jobs(search_terms: list[str]) -> None:
                                     if next_counter >= 15: 
                                         if pause_at_failed_question:
                                             screenshot(driver, job_id, "Needed manual intervention for failed question")
-                                            pyautogui.alert("Couldn't answer one or more questions.\nPlease click \"Continue\" once done.\nDO NOT CLICK Back, Next or Review button in LinkedIn.\n\n\n\n\nYou can turn off \"Pause at failed question\" setting in config.py", "Help Needed", "Continue")
+                                            pyautogui.alert("No se pudo responder una o más preguntas.\nHaga clic en \"Continuar\" cuando termine.\nNO HAGA CLIC en los botones Atrás, Siguiente o Revisar en LinkedIn.\n\n\n\n\nPuede desactivar la configuración \"Pause at failed question\" en config.py", "Ayuda necesaria", "Continuar")
                                             next_counter = 1
                                             continue
-                                        if questions_list: print_lg("Stuck for one or some of the following questions...", questions_list)
+                                        if questions_list: print_lg("Atascado en una o algunas de las siguientes preguntas...", questions_list)
                                         screenshot_name = screenshot(driver, job_id, "Failed at questions")
                                         errored = "stuck"
-                                        raise Exception("Seems like stuck in a continuous loop of next, probably because of new questions.")
+                                        raise Exception("Parece que estamos atascados en un bucle continuo de siguiente, probablemente debido a nuevas preguntas.")
+                                    
                                     questions_list = answer_questions(modal, questions_list, work_location)
                                     if useNewResume and not uploaded: uploaded, resume = upload_resume(modal, default_resume_path)
-                                    try: next_button = modal.find_element(By.XPATH, './/span[normalize-space(.)="Review"]') 
-                                    except NoSuchElementException:  next_button = modal.find_element(By.XPATH, './/button[contains(span, "Next")]')
+                                    
+                                    # Intentar encontrar los botones en diferentes idiomas
+                                    try: 
+                                        next_button = modal.find_element(By.XPATH, './/span[normalize-space(.)="Revisar"]')
+                                    except NoSuchElementException:
+                                        try:
+                                            next_button = modal.find_element(By.XPATH, './/span[normalize-space(.)="Review"]')
+                                        except NoSuchElementException:
+                                            try:
+                                                next_button = modal.find_element(By.XPATH, './/button[contains(span, "Next")]')
+                                            except NoSuchElementException:
+                                                next_button = modal.find_element(By.XPATH, './/button[contains(span, "Siguiente")]')
+                                    
                                     try: next_button.click()
-                                    except ElementClickInterceptedException: break    # Happens when it tries to click Next button in About Company photos section
+                                    except ElementClickInterceptedException: break    # Ocurre cuando intenta hacer clic en el botón Siguiente en la sección de fotos de About Company
                                     buffer(click_gap)
 
                             except NoSuchElementException: errored = "nose"
                             finally:
                                 if questions_list and errored != "stuck": 
-                                    print_lg("Answered the following questions...", questions_list)
+                                    print_lg("Se respondieron las siguientes preguntas...", questions_list)
                                     print("\n\n" + "\n".join(str(question) for question in questions_list) + "\n\n")
-                                wait_span_click(driver, "Review", 1, scrollTop=True)
+                                
+                                # Intentar con diferentes textos para los botones
+                                if not wait_span_click(driver, "Revisar", 1, scrollTop=True):
+                                    wait_span_click(driver, "Review", 1, scrollTop=True)
+                                
                                 cur_pause_before_submit = pause_before_submit
                                 if errored != "stuck" and cur_pause_before_submit:
-                                    decision = pyautogui.confirm('1. Please verify your information.\n2. If you edited something, please return to this final screen.\n3. DO NOT CLICK "Submit Application".\n\n\n\n\nYou can turn off "Pause before submit" setting in config.py\nTo TEMPORARILY disable pausing, click "Disable Pause"', "Confirm your information",["Disable Pause", "Discard Application", "Submit Application"])
-                                    if decision == "Discard Application": raise Exception("Job application discarded by user!")
-                                    pause_before_submit = False if "Disable Pause" == decision else True
-                                    # try_xp(modal, ".//span[normalize-space(.)='Review']")
+                                    decision = pyautogui.confirm('1. Por favor verifique su información.\n2. Si editó algo, vuelva a esta pantalla final.\n3. NO HAGA CLIC en "Enviar solicitud".\n\n\n\n\nPuede desactivar la configuración "Pause before submit" en config.py\nPara desactivar temporalmente la pausa, haga clic en "Desactivar pausa"', "Confirme su información",["Desactivar pausa", "Descartar solicitud", "Enviar solicitud"])
+                                    if decision == "Descartar solicitud": raise Exception("Solicitud de trabajo descartada por el usuario!")
+                                    pause_before_submit = False if "Desactivar pausa" == decision else True
+                                
                                 follow_company(modal)
-                                if wait_span_click(driver, "Submit application", 2, scrollTop=True): 
+                                
+                                # Intentar los botones de envío en diferentes idiomas
+                                submit_clicked = False
+                                if wait_span_click(driver, "Enviar solicitud", 2, scrollTop=True):
+                                    submit_clicked = True
+                                elif wait_span_click(driver, "Submit application", 2, scrollTop=True):
+                                    submit_clicked = True
+                                
+                                if submit_clicked:
                                     date_applied = datetime.now()
-                                    if not wait_span_click(driver, "Done", 2): actions.send_keys(Keys.ESCAPE).perform()
-                                elif errored != "stuck" and cur_pause_before_submit and "Yes" in pyautogui.confirm("You submitted the application, didn't you 😒?", "Failed to find Submit Application!", ["Yes", "No"]):
+                                    if not wait_span_click(driver, "Listo", 2):
+                                        if not wait_span_click(driver, "Done", 2):
+                                            actions.send_keys(Keys.ESCAPE).perform()
+                                elif errored != "stuck" and cur_pause_before_submit and "Yes" in pyautogui.confirm("¿Has enviado la solicitud manualmente? 😒", "No se pudo encontrar el botón de enviar solicitud", ["Si", "No"]):
                                     date_applied = datetime.now()
                                     wait_span_click(driver, "Done", 2)
                                 else:
-                                    print_lg("Since, Submit Application failed, discarding the job application...")
-                                    # if screenshot_name == "Not Available":  screenshot_name = screenshot(driver, job_id, "Failed to click Submit application")
-                                    # else:   screenshot_name = [screenshot_name, screenshot(driver, job_id, "Failed to click Submit application")]
-                                    if errored == "nose": raise Exception("Failed to click Submit application 😑")
+                                    print_lg("No se pudo enviar la solicitud, descartando la aplicación...")
+                                    if errored == "nose": raise Exception("No se pudo hacer clic en el botón de enviar solicitud 😑")
 
+                                # Si se envió correctamente, registrar en las estadísticas
+                                application_link = "Easy Applied"
+                                easy_applied_count += 1
+                                submitted_jobs(job_id, title, company, work_location, work_style, description, experience_required, skills, hr_name, hr_link, resume, reposted, date_listed, date_applied, job_link, application_link, questions_list, connect_request)
+                                if uploaded: useNewResume = False
+                                applied_jobs.add(job_id)
+                                print_lg(f'Aplicación enviada exitosamente para "{title} | {company}". ID de trabajo: {job_id}')
 
                         except Exception as e:
-                            print_lg("Failed to Easy apply!")
-                            # print_lg(e)
-                            critical_error_log("Somewhere in Easy Apply process",e)
-                            failed_job(job_id, job_link, resume, date_listed, "Problem in Easy Applying", e, application_link, screenshot_name)
+                            print_lg("Error en el proceso de Easy Apply!")
+                            print_lg(f"Error detallado: {str(e)}")
+                            critical_error_log("Error en el proceso de Easy Apply",e)
+                            failed_job(job_id, job_link, resume, date_listed, "Problema en Easy Apply", e, application_link, screenshot_name)
                             failed_count += 1
                             discard_job()
                             continue
                     else:
-                        # Case 2: Apply externally
-                        skip, application_link, tabs_count = external_apply(pagination_element, job_id, job_link, resume, date_listed, application_link, screenshot_name)
-                        if dailyEasyApplyLimitReached:
-                            print_lg("\n###############  Daily application limit for Easy Apply is reached!  ###############\n")
-                            return
-                        if skip: continue
-
-                    submitted_jobs(job_id, title, company, work_location, work_style, description, experience_required, skills, hr_name, hr_link, resume, reposted, date_listed, date_applied, job_link, application_link, questions_list, connect_request)
-                    if uploaded:   useNewResume = False
-
-                    print_lg(f'Successfully saved "{title} | {company}" job. Job ID: {job_id} info')
+                        # Si no se pudo encontrar o hacer clic en un botón de Easy Apply, intentar con aplicación externa
+                        print_lg("Intentando proceso de aplicación externa...")
+                        try:
+                            screenshot_name = screenshot(driver, job_id, "external_apply_attempt")
+                            skip, application_link, tabs_count = external_apply(pagination_element, job_id, job_link, resume, date_listed, application_link, screenshot_name)
+                            if dailyEasyApplyLimitReached:
+                                print_lg("\n###############  Daily application limit for Easy Apply is reached!  ###############\n")
+                                return
+                            if skip: continue
+                            
+                            submitted_jobs(job_id, title, company, work_location, work_style, description, experience_required, skills, hr_name, hr_link, resume, reposted, date_listed, date_applied, job_link, application_link, questions_list, connect_request)
+                            external_jobs_count += 1
+                            applied_jobs.add(job_id)
+                            print_lg(f'Información de aplicación externa guardada para "{title} | {company}". ID de trabajo: {job_id}')
+                        except Exception as e:
+                            print_lg(f"Error al intentar aplicación externa: {str(e)}")
+                            failed_count += 1
+                            continue
+                    
                     current_count += 1
-                    if application_link == "Easy Applied": easy_applied_count += 1
-                    else:   external_jobs_count += 1
-                    applied_jobs.add(job_id)
 
 
 

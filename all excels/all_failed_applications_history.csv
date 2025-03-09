@@ -1,340 +1,171 @@
 Job ID,Job Link,Resume Tried,Date listed,Date Tried,Assumed Reason,Stack Trace,External Job link,Screenshot Name
-4148127785,https://www.linkedin.com/jobs/view/4148127785,Pending,Unknown,2025-03-08 17:50:16.031151,Found Blacklisted words in About Company,Failed to find an element with given classes,Skipped,Not Available
-4164567561,https://www.linkedin.com/jobs/view/4164567561,Pending,Unknown,2025-03-08 17:50:18.340691,Found Blacklisted words in About Company,Failed to find an element with given classes,Skipped,Not Available
-4156979966,https://www.linkedin.com/jobs/view/4156979966,Pending,Unknown,2025-03-08 17:50:20.762370,Found Blacklisted words in About Company,Failed to find an element with given classes,Skipped,Not Available
-4106884739,https://www.linkedin.com/jobs/view/4106884739,Pending,Unknown,2025-03-08 17:50:23.114201,Found Blacklisted words in About Company,Failed to find an element with given classes,Skipped,Not Available
-4144127967,https://www.linkedin.com/jobs/view/4144127967,Pending,Unknown,2025-03-08 17:50:28.977409,Required experience is high,"
+4160514101,https://www.linkedin.com/jobs/view/4160514101,Pending,Unknown,2025-03-09 01:51:21.993772,Required experience is high,"
 Acerca del empleo
-Overview
+About Donorbox
+Donorbox is a leading fundraising platform and donor management system for nonprofit organizations. Our mission is to accelerate positive impact worldwide by helping nonprofits become highly effective at raising funds and managing their supporter base. Since 2014, we have powered more than 100,000 global organizations to close to $3B in donations. 🚀
 
-How You’ll Make an Impact
+Our fast-growing company is profitable and bootstrapped with a healthy run rate. We have a fully distributed and diverse 150-person team based in 16+ states and 23+ countries.
 
-At Epsilon, we act with integrity, work together to win, and innovate with purpose. In this role, you will have the opportunity to collaborate with sales teams and stakeholders, bridge the gap between business and technology, and make a measurable impact on our company’s success. If you are passionate about data science, geospatial analytics, and solving complex business challenges, this is the perfect opportunity for you.
+🏅Donorbox is rated the #1 software for fundraising, donor management, and nonprofit payment on G2 based on hundreds of verified customer reviews. We're proud of what we do, and our product reflects it!
+The Role
+We are seeking a highly analytical and detail-oriented Senior Business Intelligence Analyst to join our Data Team. This role is pivotal in guiding technical decisions, enabling product development, and supporting customer-facing teams by leveraging data insights to drive business strategy.
 
-We are looking for an Analytics Engineer to join our Audience Lab team, reporting to our Data Science Lead. At Epsilon, you will play a key role in transforming business requirements into scalable technical solutions within our Big Data ecosystem. You will work cross-functionally with Technology and Customer Success Managers to address business needs and deliver high-quality results. Your work will directly contribute to custom audience generation, insights development, and reporting, helping our clients achieve their goals.
-
-What You’ll Achieve
-
-Use your expertise to research and recommend approaches to solving our technology and business problems.
-Generate custom audiences, insights, and reports by leveraging multiple data sources.
-Design and develop processes that help monitor and maintain data quality.
-Collaborate with Customer Success and Technology teams to translate business needs into actionable technical deliverables.
-Develop dashboards with Metabase, Power BI to deliver routine reports to clients and internal stakeholders. These dashboards will provide insights to program performance, business impact and activity monitoring to identify and address execution errors.
-Propose analytical solutions based on business needs and understanding.
-Identify data sources relevant to business needs.
-Communicate findings and solutions effectively to both technical and non-technical audiences.
-Develop and implement Data Services processes that support scalable data-driven solutions.
-Build and optimize machine learning models to drive business insights and decision-making.
-Continuously explore and adopt new technologies to improve efficiency and innovation.
-
+As an individual contributor within our Data Team, you will be responsible for gathering, cleaning, aggregating, and cross-referencing data from multiple sources, including our PaaS product and various company tools. Your insights will help us understand user behavior, optimize workflows, and measure the effectiveness of our solutions.
 Who You Are
+You are a meticulous statistical analysis professional (almost pedantic) who loves uncovering hidden insights in vast data sets. You thrive on cleaning up messy metrics and refining dashboards while singing “Correlation doesn't imply causation”. You have a keen eye for spotting metrics that can be tricky or overly simplistic, and you consistently double-check their accuracy and relevance.
+Responsibilities
 
-What you’ll bring with you:
-4+ years of experience with SQL and Python.
-2+ years of experience working with AWS and PySpark.
-Experience in dashboard development (Metabase preferred).
-Proficiency in Data Science, including machine learning model training and spatial data transformation.
-Hands-on experience with geospatial data processing and analysis.
-Strong knowledge of Big Data technologies and frameworks.
-Experience with version control systems, particularly GitHub.
-Passion for learning new technologies and solving complex data challenges.
-Strong analytical and problem-solving skills.
-Proven ability to work cross-functionally with sales, technology, and customer success teams.
-Experience in presenting and communicating insights to executives and stakeholders.
-Why you might stand out from other talent:
-Experience with cloud-based data pipelines and automation.
-Familiarity with business intelligence tools beyond Metabase.
-Strong background in statistical analysis and predictive modeling.
-Experience working with high-volume datasets in a production environment.
-Additional Information
+1. Cross-functional Collaboration
+Act as a translator between data and business objectives, describing and connecting product metrics to company's OKRs and KPIs.
+Work closely with product, business, and engineering teams to gather requirements and define key metrics for success.
+Request and define new measurements from other teams, providing clear explanations and connections to the company OKRs.
 
-When You Join Us, We’ll Create Something EPIC Together
+2. Metrics Analysis & Strategy:
+Develop and monitor strategic KPIs that align with organizational OKRs, ensuring they are actionable and results-oriented.
+Analyze platform performance data to identify trends, patterns, and areas for improvement.
+Define measurements, metrics, and tools for measuring the products.
 
-Epsilon is a global data, technology and services company that powers the marketing and advertising ecosystem. For decades, we’ve provided marketers from the world’s leading brands the data, technology and services they need to engage consumers with 1 View, 1 Vision and 1 Voice. 1 View of their universe of potential buyers. 1 Vision for engaging each individual. And 1 Voice to harmonize engagement across paid, owned and earned channels.
+3. Dashboard Development & Reporting:
+Design, develop, and maintain interactive dashboards for tracking KPIs and key data points.
+Provide regular insights and reports to stakeholders, enabling informed, data-driven decision-making
 
-Epsilon’s comprehensive portfolio of capabilities across our suite of digital media, messaging and loyalty solutions bridge the divide between marketing and advertising technology. We process 400+ billion consumer actions each day using advanced AI and hold many patents of proprietary technology, including real-time modeling languages and consumer privacy advancements. Thanks to the work of every employee, Epsilon has been consistently recognized as industry-leading by Forrester, Adweek and the MRC. Epsilon is a global company with more than 9,000 employees around the world.
+4. Process Optimization:
+Identify bottlenecks and inefficiencies in metric tracking and reporting processes, proposing innovative solutions to enhance accuracy
+Ensure data integrity and accuracy across all reporting tools and systems.
 
-Epsilon Has a Core Set Of 5 Values That Define Our Culture And Guide Us To Create Value For Our Clients, Our People And Consumers. We Are Seeking Candidates That Align With Our Company Values, Demonstrate Them And Make Them Meaningful In Their Day-to-day Work
+5. Strategic Input:
+Partner with leadership to align product analytics with broader business goals and OKRs.
+Contribute to defining and refining the long-term data strategy of the company.
+Qualifications & Experience
+7+ years of experience in business intelligence, data analytics, or a similar field.
+Excellent verbal and written communication skills in English.
+Expert-level knowledge of statistics- you never mistake correlation for causation. Even if you try ;)
+Self-motivated team player, able to work independently and collaboratively in a fast-paced environment, adapting to evolving team needs.
+Ability to translate data into actionable insights and present findings to non-technical stakeholders.
+Customer-oriented approach with a focus on providing excellent service.
+Very comfortable with SQL.
+Excellent pragmatism in analyzing metrics, with the ability to distinguish between valuable, actionable metric and mere trivia.
+Details
+Fully remote based in Latin America
+Salary: $45k-$60k USD per annum, depending on experience and location
+Benefits & Perks
+Fully remote work from the comfort of your home
+Eligibility for employee equity plan (stock options)
+Reimbursement package for home office expenses, up to $1.5k
+Health insurance premium reimbursements, up to 75% for you and your family
+Generous time off policy of 21 days (birthday included 🎉), 8 holidays of your choice, and 2 paid volunteer days
+Wellness program with fitness and mindfulness classes
+Love your work and our mission of serving nonprofits!
+The Application Process
 
-Act with integrity. We are transparent and have the courage to do the right thing.
-Work together to win together. We believe collaboration is the catalyst that unlocks our full potential.
-Innovate with purpose. We shape the market with big ideas that drive big outcomes.
-Respect all voices. We embrace differences and foster a culture of connection and belonging.
-Empower with accountability. We trust each other to own and deliver on common goals.
+We have 6 stages:
+Apply here and fill out our questions to tell us about you! Please do not use AI in your answers.
+Prescreen Call with Talent Acquisition Associate
+Interview with Hiring Manager
+Assessment
+Panel/Final Interview
 
-Because You Matter
+If this sounds like the right role for you, please apply today and let us know why. We look forward to hearing from you!
 
-Benefits
-
-As an Epsilon employee, you deserve perks and benefits that put you, your family and your finances first. Our benefits encompass a wide range of offerings, including but not limited to the following:
-
-Time to Recharge: 15 days of holidays, LATAM rest week at the end of the year, flex-Fridays (working until noon every other week)
-Family Well-Being: Parental/new child benefits
-Extra Perks: Hybrid work scheme, medical insurance, language training (English and/or Portuguese), professional development, employee recognition, health awareness benefits, home internet fee.
-
-Experience required 4 > Current Experience 3. Skipping this job!
+Experience required 7 > Current Experience 3. Skipping this job!
 ",Skipped,Not Available
-4172843687,https://www.linkedin.com/jobs/view/4172843687,Pending,Unknown,2025-03-08 18:10:20.314636,Required experience is high,"
+4153120146,https://www.linkedin.com/jobs/view/4153120146,Previous resume,Unknown,2025-03-09 01:53:55.760855,Problema en Easy Apply,No se pudo hacer clic en el botón de enviar solicitud 😑,Easy Applied,Not Available
+4164567561,https://www.linkedin.com/jobs/view/4164567561,Pending,Unknown,2025-03-09 01:55:02.515854,Required experience is high,"
 Acerca del empleo
-Title: IT System Analyst / Application Engineer
-Location: Argentina (remote)
+Role title: Data Analyst
 
-Role Summary
-Seeking an IT System Analyst / Application Engineer to support, enhance, and maintain enterprise applications within its IT ecosystem. The candidate will work closely with business stakeholders, IT teams, and external vendors to ensure seamless system operations, integration, and performance optimization. This role requires a mix of business analysis, system support, and application engineering skills, with a strong understanding of IT infrastructure and software development life cycles.
+Choosing Capgemini means choosing a company where you will be empowered to shape your career in the way you’d like, where you’ll be supported and inspired by a collaborative community of colleagues around the world, and where you’ll be able to reimagine what’s possible. Join us and help the world’s leading organizations unluck the value of technology and build a more sustainable, more inclusive world.
 
-Key Responsibilities
-✅ System Analysis & Business Support:
-Collaborate with business users to gather and define system requirements.
-Conduct system analysis to identify gaps, inefficiencies, and areas for process optimization.
-Maintain documentation of system functionality, configurations, and updates.
-✅ Application Engineering & Maintenance:
-Support and maintain enterprise applications used in finance, operations, or upstream/downstream business units.
-Troubleshoot application performance issues and implement fixes.
-Work on system enhancements, patches, and upgrades, ensuring minimal disruption to operations.
-Implement integration solutions with existing IT systems and third-party applications.
-✅ Data Management & Reporting:
-Develop and optimize SQL queries, stored procedures, and database structures.
-Utilize Power BI, Power Automate, or other tools to create reports and automate workflows.
-Ensure data integrity and security compliance in accordance with IT policies.
-✅ Agile & Project Coordination:
-Participate in Agile ceremonies such as backlog grooming, sprint planning, and retrospectives.
-Support project planning, stakeholder meetings, and requirement prioritization.
-Coordinate with cross-functional teams (developers, QA, business users) for project execution.
-✅ Technical Tool Proficiency:
-Work with Microsoft Teams, MS Project, Azure DevOps, and ServiceNow for project tracking and collaboration.
-Assist in setting up CI/CD pipelines and DevOps processes where applicable.
-Support cloud-based application deployments and optimizations (Azure, AWS).
+Location: Argentina
 
-Required Qualifications & Skills
-🔹 Education & Experience:
-Bachelor's degree in Computer Science, Information Systems, or related field.
-5+ years of experience in IT system analysis, application engineering, or business systems support.
-Experience working in Oil & Gas, Finance, or Enterprise IT environments is preferred.
+Role description
 
-🔹 Technical Skills:
-Hands-on experience with enterprise applications, databases (SQL, Oracle, SAP, or similar).
-Strong knowledge of Power BI, Power Automate, MS Project, and Agile methodologies.
-Familiarity with ITSM tools such as ServiceNow.
-Understanding of cloud-based systems (Azure, AWS) and integrations.
 
-🔹 Soft Skills & Mindset:
-Strong analytical and problem-solving abilities.
-Excellent communication skills with business and technical stakeholders.
-Proactive, self-motivated, and able to work with minimal supervision.
-Ability to work in fast-paced, cross-functional teams within an Agile framework.
+Data Analyst is responsible for detecting and preventing automated abuse of client's website including:
+
+Scraping of content (jobs, resumes) that exposes Client data to malicious actors
+Automated actions (applying to jobs, posting/reporting of company reviews) that distort our employment marketplace with high-volume actions
+Extracting free value (i.e. unlimited resume views within free trial) from Indeed that risks jobseeker data getting into the wrong hands.
+
+The team is focused on rapid experimentation and marketplace changes using a number of anti-bot tactics, and measuring success and opportunity sizes for various efforts is critical. We are presently lacking the staffing to scale this process up, leading to bottlenecks that delay our ability to react to new threats or properly measure the impact of our mitigation efforts.
+
+
+Typical duties will include:
+
+Developing new business metrics to help quantify the scale of bot usage on various Indeed products
+Measuring the impact of anti-bot strategies
+Creating dashboards and reporting that capture the team’s progress
+Presenting results and learnings to leadership audiences
+
+
+
+Required Skills:
+
+5+ years experience using SQL and Python to analyze data for business problems
+Familiarity working with large data sets (> 1 billion records) using tools like Spark, Presto, Athena
+Strong communication and presentation skills and the ability to tell a story with data
+
+
+
+WHAT YOU’LL LOVE ABOUT WORKING HERE
+
+We recognize the significance of flexible work arrangements to provide support. Be it remote work, or flexible work hours, you will get an environment to maintain healthy work life balance.
+At the heart of our mission is your career growth. Out array of career growth programs and diverse professions are crafted to support you in exploring a world of opportunities.
+Equip yourself with valuable certification in the latest technologies.
+
+
+
+ABOUT CAPGEMINI 
+At Capgemini Engineering, the world leader in engineering services, we bring together a global team of engineers, scientists, and architects to help the world’s most innovative companies unleash their potential. From autonomous cars to life-saving robots, our digital and software technology experts think outside the box as they provide unique R&D and engineering services across all industries. Join us for a career full of opportunities. Where you can make a difference. Where no two days are the same.
 
 Experience required 5 > Current Experience 3. Skipping this job!
 ",Skipped,Not Available
-4164143868,https://www.linkedin.com/jobs/view/4164143868,Pending,Unknown,2025-03-08 18:32:34.654634,Asking for Security clearance,"
-Acerca del empleo
-The AI Tutor role is a remote, full-time, temporary position that will last up to 6 months in duration. 
-Responsibilities:
-Use proprietary software applications to provide input/labels on defined projects.
-Support and ensure the delivery of high-quality curated data.
-Play a pivotal role in supporting and contributing to the training of new tasks, working closely with the technical staff to ensure the successful development and implementation of cutting-edge initiatives/technologies.
-Interact with the technical staff to help improve the design of efficient annotation tools.
-Engage in diverse writing assignments to refine generative AI models.
-Key Qualifications:
-Proficiency in reading and writing, both in informal and professional English.
-Strong research skills, and the ability to navigate various information resources, databases, and online resources are essential.
-You display outstanding communication, interpersonal, analytical, and organizational capabilities.
-Solid reading comprehension skills combined with capacity to exercise autonomous judgment even when presented with limited data/material.
-You have a strong passion for and commitment to technological advancements and innovation.
-Preferred Qualifications:
-In addition to English, you have proficiency in reading and writing in Korean, Vietnamese, Chinese, German, Russian, Italian, French, Arabic, Indonesian, Turkish, Hindi, Persian, Spanish, and/or Portuguese
-You possess experience in technical writing, journalism, or a professional writing setting.
-Location, Hourly, and Other Expectations:
-This position is fully remote.
-We are unable to provide visa sponsorship.
-If you are based in the US, please note we are unable to hire in the states of Wyoming and Illinois at this time.
-Team members are expected to work from 9:00 am - 5:30 pm PST for the first two weeks of training and 9:00am - 5:30pm in their own timezone thereafter.
-For those who will be working from a personal device, please note your computer must be capable of running Windows 10 or macOS BigSur 11.0 or later.
-Compensation and Benefits:
-The pay for this role may range from $35/hour - $65/hr and, for full-time roles, benefits will include medical insurance depending on your country of residence.
-Your actual pay will be determined on a case-by-case basis and may vary based on the following considerations: job-related knowledge and skills, education, and experience.
-
-xAI is an equal opportunity employer and does not unlawfully discriminate based on race, color, religion, ethnicity, ancestry, national origin, sex (including pregnancy, childbirth, or related medical conditions), sexual orientation, gender, gender identity, gender expression, age, disability, medical conditions, genetic information, marital status, military or veteran status, or any other applicable legally protected characteristics. 
-Qualified applicants with arrest or conviction records will be considered for employment in accordance with all applicable federal, state, and local laws, including the San Francisco Fair Chance Ordinance, Los Angeles County Fair Chance Ordinance for Employers, and the California Fair Chance Act. 
-For Los Angeles County (unincorporated) Candidates:
-xAI reasonably believes that criminal history may have a direct, adverse and negative relationship on the following job duties, potentially resulting in the withdrawal of a conditional offer of employment: 
-Access to information technology systems and confidential information, including proprietary and trade secret information, and/or user data;
-Interacting with internal and/or external clients and colleagues; and
-Exercising sound judgment.
-California Consumer Privacy Act (CCPA) Notice
-
-Found ""Clearance"" or ""Polygraph"". Skipping this job!
-",Skipped,Not Available
-4177364797,https://www.linkedin.com/jobs/view/4177364797,Pending,Unknown,2025-03-08 18:34:21.631217,Probably didn't find Apply button or unable to switch tabs.,"Message: 
+4151451721,https://www.linkedin.com/jobs/view/4151451721,Pending,Unknown,2025-03-09 01:55:26.252663,Problema en Easy Apply,"Message: 
 Stacktrace:
-	GetHandleVerifier [0x00CFCED3+25523]
-	(No symbol) [0x00C823B4]
-	(No symbol) [0x00B506E3]
-	(No symbol) [0x00B98B79]
-	(No symbol) [0x00B98ECB]
-	(No symbol) [0x00BE1B32]
-	(No symbol) [0x00BBD844]
-	(No symbol) [0x00BDF273]
-	(No symbol) [0x00BBD5F6]
-	(No symbol) [0x00B8C55F]
-	(No symbol) [0x00B8D8A4]
-	GetHandleVerifier [0x01002713+3193843]
-	GetHandleVerifier [0x010169E9+3276489]
-	GetHandleVerifier [0x01010F0C+3253228]
-	GetHandleVerifier [0x00D9B0C0+673184]
-	(No symbol) [0x00C8B43D]
-	(No symbol) [0x00C88568]
-	(No symbol) [0x00C88709]
-	(No symbol) [0x00C7AE90]
-	BaseThreadInitThunk [0x76227BA9+25]
-	RtlInitializeExceptionChain [0x776DC2EB+107]
-	RtlClearBits [0x776DC26F+191]
+	GetHandleVerifier [0x00007FF6AE85DF85+26693]
+	(No symbol) [0x00007FF6AE7BEAD0]
+	(No symbol) [0x00007FF6AE6491CA]
+	(No symbol) [0x00007FF6AE69F747]
+	(No symbol) [0x00007FF6AE69F97C]
+	(No symbol) [0x00007FF6AE6F33C7]
+	(No symbol) [0x00007FF6AE6C792F]
+	(No symbol) [0x00007FF6AE6F00B8]
+	(No symbol) [0x00007FF6AE6C76C3]
+	(No symbol) [0x00007FF6AE690490]
+	(No symbol) [0x00007FF6AE691743]
+	GetHandleVerifier [0x00007FF6AEBB436D+3525677]
+	GetHandleVerifier [0x00007FF6AEBC7F3B+3606523]
+	GetHandleVerifier [0x00007FF6AEBBCEE3+3561379]
+	GetHandleVerifier [0x00007FF6AE927C0A+853194]
+	(No symbol) [0x00007FF6AE7C990F]
+	(No symbol) [0x00007FF6AE7C5674]
+	(No symbol) [0x00007FF6AE7C5816]
+	(No symbol) [0x00007FF6AE7B4D89]
+	BaseThreadInitThunk [0x00007FF94258259D+29]
+	RtlUserThreadStart [0x00007FF942DAAF38+40]
 ",Easy Applied,Not Available
-4094712135,https://www.linkedin.com/jobs/view/4094712135,Pending,Unknown,2025-03-08 18:42:44.849432,Asking for Security clearance,"
-Acerca del empleo
-UNIR México es una universidad mexicana de carácter privado aprobada ante la Secretaría de Educación Pública (SEP), forma parte del Grupo Proeduca, líder europeo en formación en línea que se ha consolidado como solución educativa para miles de personas en todo el mundo.
-
-Nuestra vocación es ser un referente académico para profesores y alumnos a nivel internacional. La gran mayoría de nuestros alumnos extranjeros realiza estudios de Postgrado y se encuentran hasta en 79 países diferentes a nivel global.
-
-Te invitamos a formar parte de nuestro claustro académico
-
-Buscamos docentes en diferentes áreas de conocimiento:
-
-Facultad de Empresa: MBA, Negocios Internacionales, Data Analytics, Neuromarketing, Gestión de Riesgos Financieros, Gestión Minera, Emprendimiento y Negocios Digitales.
-
-Facultad de Educación: Psicopedagogía, Necesidades Educativas del Desarrollo, Tecnología Educativa, Educación Inclusiva e Intercultural.
-
-Escuela Superior de Ingeniería y Tecnología: Inteligencia artificial, Didáctica de la Ciencia, Tecnología, Ingeniería y Matemáticas, Desarrollo y Operaciones de Software (DeVops), Industria 4.0, Diseño Industrial, Innovación y Desarrollo de Producto, Gerencia de Operaciones y Logística, Seguridad y Salud Ocupacional,
-
-Facultad de Ciencias Sociales y Humanidades: Gerencia Social, Teatro.
-
-Facultad de Ciencias de la Salud: Psicología, Gerencia de Servicios de Salud.
-
-Facultad de Derecho: Derecho Penal, Derecho de la Empresa, Gestión Tributaria, Dirección Pública
-
-Coordinador: Maestría en Intervención social: Maestría, preferiblemente con doctorado (cédula profesional). Trabajo Social, Intervención Educativa, Sociología, Antropología, Desarrollo comunitario, Desarrollo y Gestión Interculturales.
-
-Requisitos
-Título Profesional Universitario con cédula: (Imprescindible).
-Grado académico de Maestro con cédula (Imprescindible).
-Doctorado con cédula (Deseable)
-Experiencia docente y/o profesional comprobada.
-¿Qué te ofrecemos?
-Impartir clases, en la modalidad a distancia, desde la ciudad en la que residas a tiempo completo o parcial.
-Asesoría de tesis a estudiantes a nivel postgrado.
-Oportunidad de desarrollo académico e investigador dentro de una Universidad en expansión.
-Publicar bajo la filiación principal de nuestra Universidad. Sumarte a proyectos de investigación de cooperación internacional.
-
-Found ""Clearance"" or ""Polygraph"". Skipping this job!
-",Skipped,Not Available
-4159011110,https://www.linkedin.com/jobs/view/4159011110,Pending,Unknown,2025-03-08 18:52:16.305252,Asking for Security clearance,"
-Acerca del empleo
-Line of Service
-
-Assurance
-
-Industry/Sector
-
-Not Applicable
-
-Specialism
-
-Risk
-
-Management Level
-
-Associate
-
-Job Description & Summary
-
-Convocamos a profesionales interesados en desarrollarse en el Desarrollo de Auditorías Basadas en Datos y Auditoría Continua para incorporarse nuestro equipo de GRC Assurance Services. Estamos enfocados en el desarrollo e implementación de soluciones de aseguramiento de procesos de negocio y tecnología para empresas de primera línea. Nuestro equipo multidisciplinario utiliza la tecnología, el conocimiento de negocios y las ciencias de datos para ayudar a nuestros clientes a gestionar los riesgos de manera inteligente.
-
-Desafíos del puesto: 
-
-Transformación de datos.
-Reprocesos de grandes volúmenes de datos.
-Monitoreo continuo.
-Desarrollo de ETLs
-Desarrollo de tableros de visualización, indicadores y controles de auditoría continua. 
-
-Requisitos:
-
-Estudiantes de Carreras de Sistemas, Ciencias de Datos, Actuarial, Matemática, Administración de Empresas, Contabilidad o afines.
-Conocimientos en programación con Python (trabajando con librería Panda) y Power BI.
-Ingles intermedio.
-Se requiere autonomía, capacidad de trabajo en equipo con profesionales de múltiples disciplinas, atención por los detalles, rigurosidad y método en el manejo de datos.
-
-Horario: Full time (9 a 18hs)
-
-Lugar de trabajo:  Vicente López/Puerto Madero
-
-Modalidad de trabajo: Híbrido
-
-Comprender la importancia de la correcta gestión de la información
-Conocimiento en seguridad de la información y protección de datos
-Correcta gestión de la seguridad de la información 
-
-Education (if blank, degree and/or field of study not specified)
-
-Degrees/Field of Study required:
-
-Degrees/Field of Study preferred:
-
-Certifications (if blank, certifications not specified)
-
-Required Skills
-
-Optional Skills
-
-Accepting Feedback, Accepting Feedback, Active Listening, Artificial Intelligence (AI) Platform, Auditing, Auditing Methodologies, Client Management, Communication, Compliance Program Implementation, Data Analysis and Interpretation, Data Ingestion, Data Modeling, Data Quality, Data Security, Data Transformation, Data Visualization, Emotional Regulation, Empathy, External Audit, Financial Reporting, Generally Accepted Auditing Standards (GAAS), Governance Framework, Inclusion, Information Security, Intellectual Curiosity {+ 17 more}
-
-Desired Languages (If blank, desired languages not specified)
-
-Travel Requirements
-
-Not Specified
-
-Available for Work Visa Sponsorship?
-
-No
-
-Government Clearance Required?
-
-No
-
-Job Posting End Date
-
-Found ""Clearance"" or ""Polygraph"". Skipping this job!
-",Skipped,Not Available
-4161095954,https://www.linkedin.com/jobs/view/4161095954,Pending,Unknown,2025-03-08 18:52:21.584673,Required experience is high,"
-Acerca del empleo
-Seeking to hire a Contractor based out of Argentina or Mexico for our Director of Data & Site Analytics Engineering Services.
-
-Scope Of Services
-
-Own product analytics strategy and execution.
-Scale a small but mighty team that will provide the right strategic insights to encourage growth and retention of users.
-Build process for ensuring that data is available to business leaders and can inform strategic decisions.
-Develop the goals, metrics, timeline and communication plan to support the achievement of our analytics goals. 
-Partner internally and actively seek out feedback and diverse perspectives to inform your strategy and goals.
-Interface directly with the executive team to unlock insights into our users and our business. 
-In addition to analytics, you will own the business intelligence reporting environment in Tableau and our event based self-serve analytics tool (Heap).
-Ensure accurate reporting and data availability for structured data sets as well as internal self-service. 
-Beyond the data analytics team, you will also provide oversight to the website team that directly owns the CMS that backs our marketing website along with analytics support for our web properties.
-
-Why You’re a Great Fit
-
-10+ years experience in Data Analytics 
-2+ years leading product analytics, business intelligence teams, while having experience working with data warehousing/engineering teams.
-Advanced in your statistics, SQL technical skills, can write and support others with their SQL code skills.
-You are an executor as well as a leader; not scared to jump into the details to help drive projects forward.
-Experience as an exceptional mentor and thrive when you can support the development of your team.
-Experience working with diverse groups of stakeholders and teams and can facilitate productive meetings to achieve shared goals.
-Strong ability to translate data into actionable insights and use your experience to elevate the team around you.
-Must have direct experience with Tableau, and have experience with product analytics platforms like Heap, Pendo, and/or others.
-
-The team members are largely Spanish or Brazilian Portuguese speakers, our preference would be for a candidate that speaks one or both languages fluently in addition to English.
-
-Please note that given the nature of the contract, this role will not be eligible to participate in company-sponsored benefits.
-
-Experience required 10 > Current Experience 3. Skipping this job!
-",Skipped,Not Available
+4132084723,https://www.linkedin.com/jobs/view/4132084723,Previous resume,Unknown,2025-03-09 01:57:45.555397,Problema en Easy Apply,"Message: stale element reference: stale element not found in the current frame
+  (Session info: chrome=134.0.6998.36); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#stale-element-reference-exception
+Stacktrace:
+	GetHandleVerifier [0x00007FF6AE85DF85+26693]
+	(No symbol) [0x00007FF6AE7BEAD0]
+	(No symbol) [0x00007FF6AE6491CA]
+	(No symbol) [0x00007FF6AE650B2C]
+	(No symbol) [0x00007FF6AE653C8C]
+	(No symbol) [0x00007FF6AE6F13F2]
+	(No symbol) [0x00007FF6AE6C78EA]
+	(No symbol) [0x00007FF6AE6F00B8]
+	(No symbol) [0x00007FF6AE6C76C3]
+	(No symbol) [0x00007FF6AE690490]
+	(No symbol) [0x00007FF6AE691743]
+	GetHandleVerifier [0x00007FF6AEBB436D+3525677]
+	GetHandleVerifier [0x00007FF6AEBC7F3B+3606523]
+	GetHandleVerifier [0x00007FF6AEBBCEE3+3561379]
+	GetHandleVerifier [0x00007FF6AE927C0A+853194]
+	(No symbol) [0x00007FF6AE7C990F]
+	(No symbol) [0x00007FF6AE7C5674]
+	(No symbol) [0x00007FF6AE7C5816]
+	(No symbol) [0x00007FF6AE7B4D89]
+	BaseThreadInitThunk [0x00007FF94258259D+29]
+	RtlUserThreadStart [0x00007FF942DAAF38+40]
+",Easy Applied,Not Available

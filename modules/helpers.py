@@ -26,6 +26,11 @@ from pprint import pprint
 
 from config.settings import logs_folder_path
 
+# Importación para manejar alertas auto
+import threading
+import pyautogui
+import time
+
 
 
 #### Common functions ####
@@ -67,7 +72,31 @@ def critical_error_log(possible_reason: str, stack_trace: Exception) -> None:
     '''
     Function to log and print critical errors along with datetime stamp
     '''
-    print_lg(possible_reason, stack_trace, datetime.now(), from_critical=True)
+    try:
+        # Primero imprimir a la consola, que siempre debería funcionar
+        print(f"ERROR CRÍTICO: {possible_reason}")
+        print(f"Stack trace: {stack_trace}")
+        print(f"Tiempo: {datetime.now()}")
+        
+        # Intentar registrar en un archivo alternativo sin mostrar alertas
+        try:
+            # No usamos print_lg para evitar bucles y alertas
+            alt_log_path = f"{logs_folder_path}/critical_errors_{datetime.now().strftime('%Y%m%d')}.txt"
+            try:
+                with open(alt_log_path, 'a+', encoding="utf-8") as alt_file:
+                    alt_file.write(f"[CRITICAL ERROR] {datetime.now()}: {possible_reason}\n")
+                    alt_file.write(f"Stack trace: {str(stack_trace)}\n\n")
+                print(f"Error registrado en archivo alternativo: {alt_log_path}")
+            except Exception as alt_error:
+                # Si también falla escribir al archivo alternativo, al menos lo mostramos en la consola
+                print(f"No se pudo escribir al archivo de log alternativo: {str(alt_error)}")
+        except Exception as log_error:
+            # Si hay un error en el proceso de registro, simplemente mostramos en la consola
+            print(f"Error al intentar registrar error crítico: {str(log_error)}")
+    except Exception as e:
+        # Último recurso: imprimir el error a la consola
+        print(f"Error al intentar registrar un error crítico: {str(e)}")
+        print(f"Error original: {possible_reason}, {stack_trace}")
 
 
 def get_log_path():
@@ -76,10 +105,68 @@ def get_log_path():
     '''
     try:
         path = logs_folder_path+"/log.txt"
+        
+        # Verificamos que el directorio de logs exista y tenga permisos correctos
+        verify_logs_directory()
+        
         return path.replace("//","/")
     except Exception as e:
+        print(f"Error al obtener la ruta del log: {str(e)}")
         critical_error_log("Failed getting log path! So assigning default logs path: './logs/log.txt'", e)
         return "logs/log.txt"
+
+
+def verify_logs_directory():
+    '''
+    Función para verificar y reparar el directorio de logs
+    '''
+    try:
+        # Verificar si existe el directorio logs
+        logs_dir = logs_folder_path.replace("//","/")
+        if not os.path.exists(logs_dir):
+            print(f"Directorio de logs no encontrado. Creando: {logs_dir}")
+            os.makedirs(logs_dir, exist_ok=True)
+        
+        # Verificar si existe el archivo de log, y si está bloqueado
+        log_file = f"{logs_dir}/log.txt"
+        
+        # Si el archivo existe, verificar si está bloqueado
+        if os.path.exists(log_file):
+            try:
+                # Intentamos abrir y cerrar el archivo para ver si está accesible
+                with open(log_file, 'a+', encoding="utf-8") as test_file:
+                    test_file.write("")
+                print("Archivo de log verificado y accesible.")
+            except Exception as e:
+                # Si no podemos acceder, creamos uno alternativo
+                print(f"Archivo de log bloqueado: {str(e)}")
+                print("Creando archivo de log alternativo.")
+                
+                # Renombrar el archivo bloqueado como respaldo
+                try:
+                    backup_name = f"{logs_dir}/log_blocked_{datetime.now().strftime('%Y%m%d%H%M%S')}.txt"
+                    import shutil
+                    shutil.copy(log_file, backup_name)
+                    print(f"Respaldo creado: {backup_name}")
+                except:
+                    print("No se pudo crear respaldo del archivo bloqueado.")
+                
+                # Intentar eliminar el archivo bloqueado
+                try:
+                    os.remove(log_file)
+                    print("Archivo de log bloqueado eliminado.")
+                except:
+                    print("No se pudo eliminar el archivo bloqueado.")
+                
+                # Crear uno nuevo
+                try:
+                    with open(log_file, 'w', encoding="utf-8") as new_file:
+                        new_file.write(f"[NEW LOG] {datetime.now()} - Archivo de log anterior estaba bloqueado.\n")
+                    print("Nuevo archivo de log creado.")
+                except Exception as new_error:
+                    print(f"No se pudo crear nuevo archivo de log: {str(new_error)}")
+    except Exception as e:
+        print(f"Error al verificar directorio de logs: {str(e)}")
 
 
 __logs_file_path = get_log_path()
@@ -89,16 +176,57 @@ def print_lg(*msgs: str | dict, end: str = "\n", pretty: bool = False, flush: bo
     '''
     Function to log and print. **Note that, `end` and `flush` parameters are ignored if `pretty = True`**
     '''
+    # Primero, imprimimos en la consola (esto siempre debería funcionar)
+    for message in msgs:
+        pprint(message) if pretty else print(message, end=end, flush=flush)
+        
+    # Luego intentamos escribir al archivo de log con mejor manejo de errores
     try:
         for message in msgs:
-            pprint(message) if pretty else print(message, end=end, flush=flush)
-            with open(__logs_file_path, 'a+', encoding="utf-8") as file:
-                file.write(str(message) + end)
+            # Usamos un mecanismo de reintento para abrir el archivo
+            max_retries = 3
+            retry_delay = 0.5  # segundos
+            
+            for retry in range(max_retries):
+                try:
+                    # Intentamos abrir el archivo con un timeout
+                    with open(__logs_file_path, 'a+', encoding="utf-8") as file:
+                        file.write(str(message) + end)
+                    break  # Si tenemos éxito, salimos del bucle de reintentos
+                except Exception as e:
+                    if retry < max_retries - 1:
+                        # Si no es el último intento, esperamos y volvemos a intentar
+                        sleep(retry_delay)
+                    else:
+                        # Si es el último intento y falla, sólo imprimimos un mensaje y continuamos
+                        # No mostramos alertas para no interrumpir el flujo del programa
+                        print(f"ERROR: No se pudo escribir en el archivo de log. El programa continuará pero los logs pueden estar incompletos.")
+                        print(f"Detalles: {str(e)}")
+                        
+                        # Intentamos crear un archivo de registro alternativo
+                        try:
+                            alt_log_path = f"{logs_folder_path}/log_alt_{datetime.now().strftime('%Y%m%d%H%M%S')}.txt"
+                            with open(alt_log_path, 'a+', encoding="utf-8") as alt_file:
+                                alt_file.write(f"[ALTERNATIVE LOG] {datetime.now()}: Problema con el archivo de log principal.\n")
+                                alt_file.write(str(message) + end)
+                            print(f"Se creó un archivo de log alternativo: {alt_log_path}")
+                        except:
+                            # Si tampoco podemos crear un archivo alternativo, simplemente continuamos
+                            pass
+                        
+                        # Solo registramos el error crítico si no estamos ya en un error crítico
+                        if not from_critical:
+                            try:
+                                # Usar print en lugar de critical_error_log para evitar bucle infinito
+                                print(f"ERROR CRÍTICO: Log.txt está bloqueado o inaccesible.")
+                                print(f"Stack trace: {e}")
+                                print(f"Tiempo: {datetime.now()}")
+                            except:
+                                # Si incluso esto falla, simplemente continuamos
+                                pass
     except Exception as e:
-        trail = f'Skipped saving this message: "{message}" to log.txt!' if from_critical else "We'll try one more time to log..."
-        alert(f"log.txt in {logs_folder_path} is open or is occupied by another program! Please close it! {trail}", "Failed Logging")
-        if not from_critical:
-            critical_error_log("Log.txt is open or is occupied by another program!", e)
+        # Si hay un error en el manejo del error, simplemente imprimimos y continuamos
+        print(f"Error al guardar en el log: {str(e)}")
 #>
 
 
@@ -211,3 +339,14 @@ def convert_to_json(data) -> dict:
         return result_json
     except json.JSONDecodeError:
         return {"error": "Unable to parse the response as JSON", "data": data}
+
+def auto_accept_alerts(keywords=["Failed Logging"], timeout=5):
+    """
+    Esta función se deja como referencia pero no hace nada para evitar bloqueos.
+    Ahora todos los mensajes de error se imprimen en la consola sin mostrar alertas.
+    """
+    print("NOTA: Los mensajes de error se mostrarán en la consola sin interrumpir el flujo del programa.")
+    print("Si ves errores relacionados con el archivo de log, puedes intentar estas soluciones:")
+    print("1. Cierra cualquier programa que pueda estar usando el archivo log.txt")
+    print("2. Reinicia el script")
+    print("3. Elimina manualmente el archivo log.txt y vuelve a ejecutar el script")
